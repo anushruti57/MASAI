@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch and Display Indian Users</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background-color: #f0f0f0;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    li:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Indian User List</h1>
+  <ul id="userList"></ul>
+
+  <script>
+    async function fetchIndianUsers() {
+      try {
+        const response = await fetch('https://indianuserapi.com/api/users');
+        const data = await response.json(); 
+        displayUsers(data.users);
+      } catch (error) {
+        console.error('Error fetching Indian users:', error);
+        const fallbackUsers = [
+          { name: "Aarav Gupta", email: "aarav.gupta@example.com" },
+          { name: "Ishita Mehta", email: "ishita.mehta@example.com" },
+          { name: "Rohan Sharma", email: "rohan.sharma@example.com" },
+          { name: "Neha Verma", email: "neha.verma@example.com" },
+          { name: "Ananya Iyer", email: "ananya.iyer@example.com" },
+          { name: "Kunal Deshmukh", email: "kunal.deshmukh@example.com" }
+        ];
+        displayUsers(fallbackUsers);
+      }
+    }
+
+    function displayUsers(users) {
+      const userList = document.getElementById('userList');
+      userList.innerHTML = ""; 
+
+      users.forEach(user => {
+        const listItem = document.createElement('li');
+        listItem.textContent = user.name;
+        listItem.addEventListener('click', () => {
+          alert(`Email: ${user.email}`);
+        });
+        userList.appendChild(listItem);
+      });
+    }
+
+    fetchIndianUsers();
+  </script>
+
+</body>
+</html>

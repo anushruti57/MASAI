@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes App with localStorage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f8ff;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .save-btn { background-color: #4caf50; color: white; }
+        .load-btn { background-color: #2196f3; color: white; }
+        .clear-btn { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+
+    <h2>Notes App</h2>
+    <textarea id="notesArea" placeholder="Type your notes here..."></textarea>
+    <br>
+    <button class="save-btn" onclick="saveNotes()">Save Notes</button>
+    <button class="load-btn" onclick="loadNotes()">Load Notes</button>
+    <button class="clear-btn" onclick="clearNotes()">Clear Notes</button>
+
+    <script>
+        window.onload = function() {
+            loadNotes();
+        };
+
+        function saveNotes() {
+            const notes = document.getElementById("notesArea").value.trim();
+            if (notes) {
+                localStorage.setItem("userNotes", notes);
+                alert("Notes saved successfully!");
+            } else {
+                alert("Cannot save empty notes. Please enter some text.");
+            }
+        }
+
+        function loadNotes() {
+            const savedNotes = localStorage.getItem("userNotes");
+            if (savedNotes) {
+                document.getElementById("notesArea").value = savedNotes;
+            }
+        }
+
+        function clearNotes() {
+            localStorage.removeItem("userNotes");
+            document.getElementById("notesArea").value = "";
+            alert("Notes cleared!");
+        }
+    </script>
+
+</body>
+</html>

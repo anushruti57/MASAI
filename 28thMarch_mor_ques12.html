@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Theme Selector</title>
+    <style id="theme-style">
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            color: black;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Dynamic Theme Selector</h2>
+    <label for="themeSelector">Choose a Theme: </label>
+    <select id="themeSelector" onchange="changeTheme()">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="blue">Blue</option>
+    </select>
+
+    <script>
+        function changeTheme() {
+            const selectedTheme = document.getElementById("themeSelector").value;
+            applyTheme(selectedTheme);
+            sessionStorage.setItem("selectedTheme", selectedTheme);
+        }
+        function applyTheme(theme) {
+            const themeStyle = document.getElementById("theme-style");
+
+            if (theme === "dark") {
+                themeStyle.innerHTML = `
+                    body {
+                        background-color: #333;
+                        color: white;
+                    }
+                `;
+            } else if (theme === "blue") {
+                themeStyle.innerHTML = `
+                    body {
+                        background-color: #87CEEB;
+                        color: white;
+                    }
+                `;
+            } else {
+                themeStyle.innerHTML = `
+                    body {
+                        background-color: white;
+                        color: black;
+                    }
+                `;
+            }
+        }
+        window.onload = function() {
+            const savedTheme = sessionStorage.getItem("selectedTheme") || "light";
+            document.getElementById("themeSelector").value = savedTheme;
+            applyTheme(savedTheme);
+        };
+    </script>
+
+</body>
+</html>
