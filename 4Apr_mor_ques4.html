@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    h1 {
+      text-align: center;
+    }
+    form, .list {
+      margin-bottom: 2rem;
+    }
+    .book, .member {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin: 0.5rem 0;
+    }
+    .pagination {
+      display: flex;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Library Management System</h1>
+
+  <section>
+    <h2>Add Book</h2>
+    <form id="bookForm">
+      <input type="text" placeholder="Title" id="title" required>
+      <input type="text" placeholder="Author" id="author" required>
+      <input type="text" placeholder="Genre" id="genre" required>
+      <input type="number" placeholder="Published Year" id="publishedYear" required>
+      <label>
+        Available: <input type="checkbox" id="available">
+      </label>
+      <button type="submit">Add Book</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Books List</h2>
+    <div class="list" id="bookList"></div>
+    <div class="pagination">
+      <button onclick="prevPage()">Prev</button>
+      <button onclick="nextPage()">Next</button>
+    </div>
+  </section>
+
+  <script>
+    const dbUrl = 'https://your-project-id.firebaseio.com/books'; // Replace with your DB URL
+    let currentPage = Number(localStorage.getItem('currentPage')) || 1;
+    const itemsPerPage = 5;
+
+    document.getElementById('bookForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const book = {
+        title: document.getElementById('title').value,
+        author: document.getElementById('author').value,
+        genre: document.getElementById('genre').value,
+        publishedYear: Number(document.getElementById('publishedYear').value),
+        available: document.getElementById('available').checked
+      };
+
+      await fetch(⁠ ${dbUrl}.json ⁠, {
+        method: 'POST',
+        body: JSON.stringify(book),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      loadBooks();
+      e.target.reset();
+    });
+
+    async function loadBooks() {
+      const res = await fetch(⁠ ${dbUrl}.json ⁠);
+      const data = await res.json();
+
+      const books = Object.entries(data || {}).map(([id, value]) => ({ id, ...value }));
+      displayBooks(books);
+    }
+
+    function displayBooks(books) {
+      const start = (currentPage - 1) * itemsPerPage;
+      const paginated = books.slice(start, start + itemsPerPage);
+
+      const bookList = document.getElementById('bookList');
+      bookList.innerHTML = '';
+      paginated.forEach(book => {
+        const div = document.createElement('div');
+        div.className = 'book';
+        div.innerHTML = `
+          <strong>${book.title}</strong> by ${book.author} (${book.publishedYear})<br>
+          Genre: ${book.genre}<br>
+          Available: ${book.available ? 'Yes' : 'No'}
+        `;
+        bookList.appendChild(div);
+      });
+
+      localStorage.setItem('currentPage', currentPage);
+    }
+
+    function nextPage() {
+      currentPage++;
+      loadBooks();
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        loadBooks();
+      }
+    }
+
+    loadBooks();
+  </script>
+</body>
+</html>
